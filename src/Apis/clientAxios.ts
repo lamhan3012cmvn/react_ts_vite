@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import axios from "axios"
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 import queryString from "query-string"
 import Cookie from "js-cookie"
 const axiosClient = axios.create({
@@ -13,25 +13,22 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use(
-  config => {
-    //Handle token here ...
-    // const token = Cookie.get("token")
-    // config.headers.authorization = `Admin ${token}`
+  (config:AxiosRequestConfig) => {
     return config
   },
   err => {
     console.error(err)
+    return Promise.reject(err)
   }
 )
 axiosClient.interceptors.response.use(
-  res => {
+  (res: AxiosResponse) => {
     if (res && res.data) return res.data
     return res
   },
   err => {
-    //Handle err
-    // eslint-disable-next-line no-console
     console.error(err)
+    return Promise.reject(err)
   }
 )
 
